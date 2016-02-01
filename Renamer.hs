@@ -4,8 +4,8 @@ import Data.List as List
 import Data.Maybe as Maybe
 
 import Data.Time
-import System.Directory
 import System.Process
+import System.Environment
 
 -- Split the input into forward and afterward in terms of '.'
 -- ex) splitAtDot "C90.inp" -> ("C90", ".inp")
@@ -66,11 +66,22 @@ moveFile path (iFile, oFile) = callCommand command
   where command = "cp " ++ path ++ iFile ++ " " ++ path ++ oFile  
     
 main = do
+  -- Get the target directory
+  args <- getArgs
+  -- Get contents of the current repository
+  if length args > 0 then do
+    repo <- setCurrentDirectory (args !! 0)
+    putStrLn "Target directory set \n"
+    else do
+    repo <- setCurrentDirectory "./"
+    putStrLn "Default directory is ./ \n"
+  
   -- Get current time to make foot note
-  time <- getCurrentTime
+  time <- getZonedTime
   let
-    (y,m,d)  = toGregorian(utctDay time)
-    myFooter = "_" ++ (show d) ++ "d" ++ (show m) ++ "m" ++ (show y) ++ "y"
+    (LocalTime d t) = zonedTimeToLocalTime time
+    myFooter = ".svd." ++ (show t) ++ "-" ++ (show d)
+  
   -- Get contents of the current repository
   dirs <- getCurrentDirectory
   cons <- getDirectoryContents dirs
@@ -79,12 +90,13 @@ main = do
     fileNames = returnFilesToBeRenamed cons
     newNames  = renameFiles myFooter fileNames
 
-  if True then do
+  if False then do
     putStr " Not moved"
     else do
     -- (1) Rename previous ouput files
-    moved <- mapM (\x -> moveFile "./" x) newNames 
+    moved <- mapM (\x -> moveFile ((show dirs) ++ "/") x) newNames 
     print " Moved"
+    
   print "~"
   print fileNames
   print "~"
