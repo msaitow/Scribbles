@@ -34,18 +34,16 @@ _geom name = "*xyzfile 0 5 " ++ name ++ ".xyz\n"
 
 names =
   [
-    "C10.tri",
-    "C20.tri", 
-    "C30.tri", 
-    "C40.tri", 
-    "C50.tri", 
-    "C60.tri",
-    "C70.tri",
-    "C80.tri",
-    "C90.tri",
-    "C100.tri",
-    "C120.tri",
-    "C150.tri"
+    "C11.tri",
+    "C21.tri", 
+    "C31.tri", 
+    "C41.tri", 
+    "C51.tri", 
+    "C61.tri",
+    "C71.tri",
+    "C81.tri",
+    "C91.tri",
+    "C101.tri"
   ]
 
 fileName :: String -> String
