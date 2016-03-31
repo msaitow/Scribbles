@@ -7,8 +7,7 @@ import Data.Time
 import System.Process
 import System.Environment
     
--- This is supposed to work in the exactly the same way as the above one
--- but splits from the end so that "C90.loose.inp" is splitted into ("C90.loose.", "inp")
+-- Splits from the end so that "C90.loose.inp" is splitted into ("C90.loose.", "inp")
 splitAtDotBackward :: String -> (String, String)
 splitAtDotBackward x
   | myIndex /= Nothing = if (last $ fst splittedPair) == '.'
@@ -105,25 +104,8 @@ main = do
   xyzDirs  <- getCurrentDirectory
   allFiles <- getDirectoryContents xyzDirs
   let xyzFiles = returnXYZFiles allFiles
-  --print xyzFiles
   
   -- Generate the input files
   mapM (\x -> genInputFile headers myFooter x) xyzFiles
-  
---  -- Get file names to be changed
---  let
---    fileNames = returnFilesToBeRenamed cons
---    newNames  = renameFiles myFooter fileNames
---
---  if False then do
---    putStr " Not moved"
---    else do
---    -- (1) Rename previous ouput files
---    moved <- mapM (\x -> moveFile ((show dirs) ++ "/") x) newNames 
---    print " Moved"
---    
+
   putStrLn " End"
---  print fileNames
---  print "~"
---  print newNames
-  

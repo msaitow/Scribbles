@@ -1,4 +1,4 @@
-! UHF DLPNO-CCSD 6-31G* aug-cc-pV6Z/C ExtremeSCF NoAutoStart
+! UHF DLPNO-CCSD def2-TZVPP def2-TZVPP/C ExtremeSCF NoAutoStart
 
 %maxcore 4000
 
