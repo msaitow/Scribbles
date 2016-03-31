@@ -1,0 +1,16 @@
+! UHF DLPNO-CCSD 6-31G* aug-cc-pV6Z/C ExtremeSCF NoAutoStart
+
+%maxcore 4000
+
+%mdci
+      UseQROs      true
+      CIType       CCSD
+      MaxIter      35
+      Randomize    false
+      end
+
+* xyz 0 2
+    F          0.000000000      0.000000000      0.000000000
+    O          1.632401000      0.000000000      0.000000000
+    O          2.057717000      1.113495000      0.000000000
+*
