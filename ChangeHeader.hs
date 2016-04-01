@@ -7,6 +7,8 @@ import Data.Time
 import System.Process
 import System.Environment
 
+import MSUtils
+
 -- How to compile on clusters:
 -- bash> ghc --make -L/home/saitow/lib ./ChangeHeader.hs
 
@@ -18,24 +20,6 @@ replaceHeader hotLine newLine fileName = do
   let corrected     = unlines $ fmap (\x -> if x == hotLine then newLine else x) $ lines contents
   if (corrected == contents) then print " Nothing is found .. " 
   else writeFile (fileName ++ ".corrected.inp") corrected
-
--- This is supposed to work in the exactly the same way as the above one
--- but splits from the end so that "C90.loose.inp" is splitted into ("C90.loose.", "inp")
-splitAtDotBackward :: String -> (String, String)
-splitAtDotBackward x
-  | myIndex /= Nothing = if (last $ fst splittedPair) == '.'
-                         then ((init $ fst splittedPair), "." ++ (snd splittedPair))
-                         else  splittedPair
-  | otherwise          = ("None", "")
-  where
-    splittedPair = (reverse $ snd revsplitted, reverse $ fst revsplitted) 
-    revsplitted  = splitAt (Maybe.fromJust myIndex) reversed    
-    reversed     = reverse x
-
-    findDotIndex :: String -> Maybe Int
-    findDotIndex kore = List.findIndex (== '.') kore
-
-    myIndex = findDotIndex reversed
 
 -- Returns all the output and intermediate files whose input is there
 -- For example:    

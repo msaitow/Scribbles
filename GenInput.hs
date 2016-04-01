@@ -6,24 +6,9 @@ import Data.Maybe as Maybe
 import Data.Time
 import System.Process
 import System.Environment
-    
--- Splits from the end so that "C90.loose.inp" is splitted into ("C90.loose.", "inp")
-splitAtDotBackward :: String -> (String, String)
-splitAtDotBackward x
-  | myIndex /= Nothing = if (last $ fst splittedPair) == '.'
-                         then ((init $ fst splittedPair), "." ++ (snd splittedPair))
-                         else  splittedPair
-  | otherwise          = ("None", "")
-  where
-    splittedPair = (reverse $ snd revsplitted, reverse $ fst revsplitted) 
-    revsplitted  = splitAt (Maybe.fromJust myIndex) reversed    
-    reversed     = reverse x
 
-    findDotIndex :: String -> Maybe Int
-    findDotIndex kore = List.findIndex (== '.') kore
+import MSUtils
 
-    myIndex = findDotIndex reversed
-  
 -- Returns all the xyz files
 returnXYZFiles :: [String] -> [String]
 returnXYZFiles inFiles = geomFiles
@@ -73,7 +58,9 @@ main = do
     repo <- setCurrentDirectory (args !! 1)
     putStrLn $ "Target directory ... " ++ (show (args !! 1))
     else do
-    repo <- setCurrentDirectory "./"
+    putStrLn ""
+    putStrLn " This program generates a set of orca input files with the same wavefunction / basis set settings for different geometries"
+    putStrLn ""    
     putStrLn " Usage:"
     putStrLn "       GenInput HeaderFile GeomDirec"    
     putStrLn " "
@@ -99,7 +86,7 @@ main = do
   putStrLn " ==================================="
   putStr headers
   putStrLn " ==================================="
-  
+  putStrLn ""  
   -- Get contents of the current repository
   xyzDirs  <- getCurrentDirectory
   allFiles <- getDirectoryContents xyzDirs
