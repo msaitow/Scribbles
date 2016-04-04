@@ -6,8 +6,8 @@ import System.Environment
 
 import MSUtils
   
--- Extract the correlation reference energy
--- Input lined contes of the orca output files
+-- Extract the correlation energy
+-- Input: lined contes of the orca output files
 extractEnergies :: String -> (String, String)
 extractEnergies contents = (zerothE, corrE)
   where
@@ -18,12 +18,12 @@ extractEnergies contents = (zerothE, corrE)
     corrE   = if length corrEcand == 0 then "N.F." else last $ head corrEcand
 
 -- Generate the keyword for a given file
--- Input file name for a orca output              
+-- Input: file name for a orca output              
 genKey :: String -> String
 genKey myName = (fst (splitAtDotForward myName)) ++ (snd (splitAtDotBackward myName))
 
 -- Returns (keyword, (E0, Ecorr))
--- Input fileName 
+-- Input: fileName 
 getEnergy :: String -> IO (String, (String, String))
 getEnergy myName = do
   cont <- readFile myName
@@ -89,13 +89,30 @@ calcError eref epno
     percent = (erefD - (erefD - epnoD)) / erefD * 100.0
     erefD   = (read eref) :: Double    
     epnoD   = (read epno) :: Double
+
+-- Calculate the truncation error
+calcError' :: (String, String) -> Maybe Double
+calcError' (eref, epno)
+  | eref == "N.F." || epno == "N.F." = Nothing
+  | otherwise                        = Just percent
+  where
+    percent =  - (erefD - epnoD) / erefD * 100.0
+    erefD   = (read eref) :: Double    
+    epnoD   = (read epno) :: Double
+
+-- [Error in correlation energy (%)] -> (maximim error, RMSD)
+calcRMSD :: [Double] -> (Double,Double)
+calcRMSD inp = (max, rmsd)
+  where
+    rmsd = sqrt $ (sum $ fmap (\x -> x ^ 2) inp) / (fromIntegral $ length inp)
+    max  = maximum $ fmap abs inp
     
 -- Analyze and print data ..
 analDatum :: (String, String, String, String, String) -> IO ()
 analDatum (fName, eref, ecorr, elpno, edlpno) = do
   let tag = fst $ splitAtDotBackward fName
   putStrLn $ " " ++ tag ++ " : " ++ (calcError ecorr elpno) ++ ", " ++ (calcError ecorr edlpno)
-  
+
 main = do
   -- Get the target directory
   args <- getArgs
@@ -104,7 +121,7 @@ main = do
     repo <- setCurrentDirectory $ (args !! 0) ++ "/canon"
     putStrLn "Target directory set \n"
     else do
-    putStrLn "This program reads all the input files in the gven target directory and prints the correlation energy\n"
+    putStrLn "This program reads all the orca output files in the gven target directory and prints the correlation energy\n"
     error "Aborting further operation"
 
   -- (1) Canonical results
@@ -174,6 +191,19 @@ main = do
   putStrLn " -------------------"
   putStrLn ""
 
+  let
+    dLPNOs  = calcRMSD $ fmap (\x -> Maybe.fromJust x) $ filter(\x -> x /= Nothing) $ fmap calcError' $ fmap (\(_, _, x, b, _) -> (x, b)) $ cData 
+    dDLPNOs = calcRMSD $ fmap (\x -> Maybe.fromJust x) $ filter(\x -> x /= Nothing) $ fmap calcError' $ fmap (\(_, _, x, _, c) -> (x, c)) $ cData 
+
+  putStrLn   ""
+  putStrLn   " -------------------"
+  putStrLn   "         Max   RMSD "
+  putStrLn   " -------------------"
+  putStrLn $ " LPNO  : " ++ (show $ fst dLPNOs ) ++ ", " ++ (show $ snd dLPNOs )
+  putStrLn $ " DLPNO : " ++ (show $ fst dDLPNOs) ++ ", " ++ (show $ snd dDLPNOs)  
+  putStrLn   " -------------------"
+  putStrLn   ""
+  
   print "End"
 
   
