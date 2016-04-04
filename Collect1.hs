@@ -17,7 +17,7 @@ extractEnergies contents = (zerothE, corrE)
     tokenC  = fmap words $ lines contents
     zeroEcand = filter (\x ->  "E(0)" `elem` x) tokenC 
     zerothE = if length zeroEcand == 0 then "N.F." else last $ head zeroEcand
-    corrEcand = filter (\x -> ("E(CORR)(corrected)" `elem` x) || ("E(CORR)" `elem` x)) tokenC
+    corrEcand = filter (\x -> ("E(CORR)(corrected)" `elem` x) || ("E(CORR)" `elem` x) || ("E(CORR)(total)" `elem` x)) tokenC    
     corrE   = if length corrEcand == 0 then "N.F." else last $ head corrEcand
 
 -- Generate the keyword for a given file
@@ -33,24 +33,6 @@ getEnergy myName = do
   let keyword = genKey myName
       ene     =  extractEnergies cont
   return (keyword, ene)
-
---dbg -- Returns (keyword, (E0, Ecorr))
---dbg -- Input fileName 
---dbg getEnergy1 :: String -> IO (String, String)
---dbg getEnergy1 myName = do
---dbg   cont <- readFile myName
---dbg   --print $ fmap words $ lines cont 
---dbg   --let keyword = genKey myName
---dbg   let ene     =  extractEnergies cont
---dbg   return ene
---dbg 
---dbg -- Returns (keyword, (E0, Ecorr))
---dbg -- Input fileName 
---dbg getEnergy2 :: String -> IO String
---dbg getEnergy2 myName = do
---dbg   cont <- readFile myName
---dbg   let keyword = genKey myName
---dbg   return keyword
 
 -- Returns all the output
 returnOutFiles :: [String] -> [String]
