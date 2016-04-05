@@ -20,7 +20,7 @@ extractEnergiesStrong contents = (zerothE, corrE)
     tokenC  = fmap words $ lines contents
     zeroEcand = filter (\x ->  "E(0)" `elem` x) tokenC 
     zerothE = if length zeroEcand == 0 then "N.F." else last $ head zeroEcand
-    corrEcand = filter (\x -> ("E(CORR)(corrected)" `elem` x) || ("E(CORR)" `elem` x) || ("E(CORR)(total)" `elem` x)) tokenC
+    corrEcand = filter (\x -> ("E(CORR)(strong-pairs)" `elem` x) || ("E(CORR)" `elem` x)) tokenC
     corrE   = if length corrEcand == 0 then "N.F." else last $ head corrEcand
 
 -- Extract the correlation energy

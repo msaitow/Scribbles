@@ -153,7 +153,7 @@ main = do
     putStrLn "This program reads all the orca output files in the given target directory and its subdirectory and then it prints the correlation energy"
     putStrLn ""
     putStrLn "Argument: path to directory which should contain three subdirectories, canon/, lpno/ and dlpno/. All the output files located in each subdirectories"
-    putStrLn "          are read and the LPNO and DLPNO truncation errors are calculaed. Note that here errors in total correlation energies are analyzed."    
+    putStrLn "          are read and the LPNO and DLPNO truncation errors are calculaed. Note that here errors in strong pair correlation energies are analyzed."    
     putStrLn ""    
     error "Aborting further operation"
 
@@ -162,7 +162,7 @@ main = do
   dirs <- getCurrentDirectory
   cons <- getDirectoryContents dirs
   let outFilesCanon = returnOutFiles cons
-  results_canon <- mapM getEnergy outFilesCanon
+  results_canon <- mapM getEnergyStrong outFilesCanon
   
   -- (2) LPNO results
   repo <- setCurrentDirectory $ (args !! 0) ++ "/lpno"
@@ -170,7 +170,7 @@ main = do
   dirs <- getCurrentDirectory
   cons <- getDirectoryContents dirs
   let outFilesLPNO = returnOutFiles cons
-  results_lpno <- mapM getEnergy outFilesLPNO
+  results_lpno <- mapM getEnergyStrong outFilesLPNO
 
   -- (3) DLPNO results
   repo <- setCurrentDirectory $ (args !! 0) ++ "/dlpno"
@@ -178,7 +178,7 @@ main = do
   dirs <- getCurrentDirectory
   cons <- getDirectoryContents dirs
   let outFilesDLPNO = returnOutFiles cons
-  results_dlpno <- mapM getEnergy outFilesDLPNO
+  results_dlpno <- mapM getEnergyStrong outFilesDLPNO
 
   -- Collect the results
   let cData = makeMaps results_canon results_lpno results_dlpno
