@@ -202,7 +202,7 @@ printRMSD cData = do
   putStrLn   " -----------------------------------"
   putStrLn   ""
 
--- Print max deviation and RMSD in percent
+-- Print max deviation and RMSD in Kcal/mol
 printRMSD' :: [(String, String, String, String, String)] -> IO ()
 printRMSD' cData = do
   let
