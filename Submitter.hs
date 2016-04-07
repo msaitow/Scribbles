@@ -60,31 +60,14 @@ main = do
     repo <- setCurrentDirectory "./"
     putStrLn "Default directory is ./ \n"
   
---  -- Get current time to make foot note
---  time <- getZonedTime
---  let
---    (LocalTime d t) = zonedTimeToLocalTime time
---    myFooter = ".svd." ++ (show t) ++ "-" ++ (show d)
-  
   -- Get contents of the current repository
   dirs <- getCurrentDirectory
   cons <- getDirectoryContents dirs
---  -- Get file names to be changed
---  let
---    fileNames = returnFilesToBeRenamed cons
---    newNames  = renameFiles myFooter fileNames
---
---  if False then do
---    putStr " Not moved"
---    else do
---    -- (1) Rename previous ouput files
---    moved <- mapM (\x -> moveFile ((show dirs) ++ "/") x) newNames 
---    print " Moved"
-
+  
   -- Submit jobs
   let jobs = submitJobs cons
 
-  print "~"
+  print "Jobs .. "
   print jobs
       
   submitted <- mapM (\x -> callCommand x) jobs
