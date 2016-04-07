@@ -30,7 +30,6 @@ main = do
   -- Get contents of the current repository
   dirs <- getCurrentDirectory
   cons <- getDirectoryContents dirs
-  print dirs
   
   callCommand $ eliminateFiles eraseInps dirs
   
