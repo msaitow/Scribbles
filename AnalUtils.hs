@@ -1,6 +1,7 @@
 
 module AnalUtils
 (
+  hartree2kcal,
   extractEnergiesStrong,
   extractEnergies,
   returnOutFiles,
@@ -24,6 +25,9 @@ import Data.List as List
 import Text.Printf as Printf
 import MSUtils
 
+-- Conversion coefficient
+hartree2kcal = 627.5081068957
+                   
 -- Extract the correlation energy for strong pairs
 -- Input: lined contes of the orca output files
 extractEnergiesStrong :: String -> (String, String)
@@ -171,7 +175,6 @@ calcError2 (eref, epno)
   | eref == "N.F." || epno == "N.F." = Nothing
   | otherwise                        = Just (percent, error_kcal)
   where
-    hartree2kcal = 627.5081068957
     percent      = (erefD - (erefD - epnoD)) / erefD * 100.0
     error_kcal   = hartree2kcal * (erefD - epnoD)
     erefD        = (read eref) :: Double    
