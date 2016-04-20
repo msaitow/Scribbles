@@ -90,6 +90,26 @@ printOne elem = do
   if elem /= Nothing then Printf.printf " %9.2f " (Maybe.fromJust elem)
                      else Printf.printf " %9s "   ("N.F.")
 
+printOne' :: Maybe Double -> IO ()
+printOne' elem = do
+  if elem /= Nothing then Printf.printf " (%9.2f)\n " (Maybe.fromJust elem)
+                     else Printf.printf " (%9s)\n "   ("N.F.")
+
+-- esref :: reference energies
+-- es    :: dlpno energies for instance  
+printErrors :: [Maybe Double] -> [Maybe Double] -> IO ()
+printErrors erefs es = do
+  --putStrLn " Errors .. "
+  let errors = zipWith (subMaybe) es erefs
+  mapM (printOne')  errors
+  putStrLn ""
+
+subMaybe :: Maybe Double -> Maybe Double -> Maybe Double
+subMaybe a b
+  | a == Nothing = Nothing
+  | b == Nothing = Nothing
+  | otherwise    = Just $ (Maybe.fromJust a) - (Maybe.fromJust b)
+
 -- Print max deviation and RMSD in Kcal/mol
 -- canonical, lpno, dlpno  
 calc_printRMSD :: [Maybe Double] -> [Maybe Double] -> [Maybe Double] -> IO ()
@@ -168,6 +188,12 @@ main = do
   Printf.printf "Found %d entries in /dlpno .. \n" (length tableDLPNO)
   printTable tableDLPNO
 
+  putStrLn "LPNO errors .. \n"
+  printErrors ereacsC ereacsL
+    
+  putStrLn "DLPNO errors .. \n"
+  printErrors ereacsC ereacsD
+  
   calc_printRMSD ereacsC ereacsL ereacsD
   
   print "End"
