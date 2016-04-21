@@ -3,7 +3,8 @@ module AlkUtils
 ( 
   printElement,
   printAlkane,
-  printLiakosLinearTri
+  printLiakosLinearTri,
+  printLiakosLinearSing  
 ) where
   
 import Text.Printf as Printf
@@ -17,7 +18,17 @@ printLiakosLinearTri myNum = do
   putStr $ " fileName=" ++ myName ++ " .. "
   writeFile myName geom
   putStrLn " done"
-  
+
+-- Print singlet linear polyene in Liako's format
+printLiakosLinearSing :: Integer -> IO ()
+printLiakosLinearSing myNum = do
+  let myName   = "C.sing." ++ (show myNum) ++ ".xyz"
+      myLength = 3 * myNum
+      geom     = (Printf.printf " %d \n" myLength) ++ " 0 1 \n" ++ (printAlkane False myNum) :: String
+  putStr $ " fileName=" ++ myName ++ " .. "
+  writeFile myName geom
+  putStrLn " done"
+
 -- Print one element ..
 printElement :: String -> Double -> Double -> Double -> String
 printElement label x y z = Printf.printf " %4s %12.6f %12.6f %12.6f \n" label x y z
