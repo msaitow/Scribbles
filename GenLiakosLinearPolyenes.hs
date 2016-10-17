@@ -8,7 +8,7 @@ import System.Environment
 import AlkUtils
 
 main = do
-  let lengths = filter (\x -> mod x 5 == 0) [1..150]
+  let lengths = filter (\x -> mod x 5 == 0) [1..200]
   mapM (\x -> printLiakosLinearTri x) lengths
 
   putStrLn " End"
