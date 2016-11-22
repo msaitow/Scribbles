@@ -38,8 +38,8 @@ res = plot(semi,
            
            Scale.x_log10(maxvalue=0.01), Guide.ylabel("CCSD Correlation Energy Recovered %"), Guide.xlabel("TCutPNO"),
            Guide.manual_color_key("", ["DLPNO-CCSD (strong)", "DLPNO-CCSD (total)", "LPNO-CCSD (strong)", "LPNO-CCSD (total)"], ["orange", "red", "deepskyblue", "blue"]),
-           Coord.Cartesian(ymin=99, ymax=101, xflip=true), Stat.xticks(ticks=[-3, -4, -5, -6, -7, -8, -9, -10]),
-           Guide.yrug
+           Coord.Cartesian(ymin=99, ymax=101, xflip=true), Stat.xticks(ticks=[-3, -4, -5, -6, -7, -8, -9, -10])
+           #Guide.yrug
            #Stat.ygrid(ticks=[99.0, 99.5, 99.6, 99.7, 99.8, 99.9, 100.0, 100.5, 101.0]), 
   )
 
