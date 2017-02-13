@@ -2,6 +2,7 @@
 import System.Directory
 import Data.List as List
 import Data.Maybe as Maybe
+import Data.List.Split as S
 
 import Data.Time
 import System.Process
@@ -25,7 +26,8 @@ genInputFile :: String -> String -> FilePath -> IO ()
 genInputFile header label geom = do
   geoms  <- readFile $ geom ++ ".xyz"
   let
-    fileName  = geom ++ label ++ ".inp"
+    --fileName  = geom ++ label ++ ".inp"
+    fileName  = (foldl (\x y -> if x == "" then x++ y else x ++ "-" ++ y) "" $ S.splitOn "." $ geom ++ label) ++ ".inp"
     modifiedG = modGeom geoms
   putStr $ " fileName=" ++ fileName ++ " .. "
   writeFile fileName (header ++ "\n" ++ modifiedG) 
@@ -79,6 +81,7 @@ main = do
   let
     (LocalTime d t) = zonedTimeToLocalTime time
     myFooter = ".gen." ++ (show t) ++ "-" ++ (show d)
+    --myFooter = foldl (\x y -> if x == "" then x++ y else x ++ "_" ++ y) "" $ S.splitOn "." $ ".gen." ++ (show t) ++ "-" ++ (show d)
   
   -- Open the header file
   headers <- readFile headerName
