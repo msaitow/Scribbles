@@ -83,8 +83,8 @@ main = do
   time <- getZonedTime
   let
     (LocalTime d t) = zonedTimeToLocalTime time
-    myFooter = ".gen." ++ (show t) ++ "-" ++ (show d)
-    --myFooter = foldl (\x y -> if x == "" then x++ y else x ++ "_" ++ y) "" $ S.splitOn "." $ ".gen." ++ (show t) ++ "-" ++ (show d)
+    myFooter = "-gen-" ++ "T-" ++ (fmap (\x -> if x == '.' then '_' else x) $ fmap (\x -> if x == ':' then '-' else x) $ show t) ++ "-D-" ++ (show d)
+    --myFooter = ".gen." ++ (show t) ++ "-" ++ (show d)
   
   -- Open the header file
   headers <- readFile headerName
