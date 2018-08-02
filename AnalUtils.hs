@@ -96,9 +96,11 @@ makeMaps cList lList dList = fmap (\x -> findPartners x lList dList) cList
         lData = head $ filter (\x -> fst x == tag) lpnos
         dData = head $ filter (\x -> fst x == tag) dlpnos
         -- if the reference energies don't match, put smething else than the value .. Here, we trust the Eref for the canonical case
-        -- R.N. stands for reference doesn't match .. 
-        lEne = if (fst $ snd lData) == eref then (snd $ snd lData) else "R.N."
-        dEne = if (fst $ snd dData) == eref then (snd $ snd dData) else "R.N."
+        -- R.N. stands for reference doesn't match ..
+        lEne = (snd $ snd lData)
+        dEne = (snd $ snd dData)
+--        lEne = if (fst $ snd lData) == eref then (snd $ snd lData) else "R.N."
+--        dEne = if (fst $ snd dData) == eref then (snd $ snd dData) else "R.N."
 
 -- Just Print data
 printData :: [(String, String, String, String, String)] -> IO ()

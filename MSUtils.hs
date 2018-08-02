@@ -14,7 +14,7 @@ import Data.Maybe as Maybe
 splitAtDotForward :: String -> (String, String)
 splitAtDotForward x
   | myIndex /= Nothing = splitAt (Maybe.fromJust myIndex) x
-  | otherwise          = ("None", "")
+  | otherwise          = ("None", x)
   where
     findDotIndex :: String -> Maybe Int
     findDotIndex kore = List.findIndex (== '.') kore
@@ -27,7 +27,7 @@ splitAtDotBackward x
   | myIndex /= Nothing = if (last $ fst splittedPair) == '.'
                          then ((init $ fst splittedPair), "." ++ (snd splittedPair))
                          else  splittedPair
-  | otherwise          = ("None", "")
+  | otherwise          = ("None", x)
   where
     splittedPair = (reverse $ snd revsplitted, reverse $ fst revsplitted) 
     revsplitted  = splitAt (Maybe.fromJust myIndex) reversed    

@@ -12,7 +12,8 @@ import MSUtils
 -- Variables
 execName   = "orca"
 scratchDir = "/work/$USER/"
-ldDir      = "/usr/local/orca/402/orca_4_0_1_2_linux_x86-64_shared_openmpi202/"
+mpiDir     = "/usr/local/orca/402/"
+ldDir      = mpiDir ++ "orca_4_0_1_2_linux_x86-64_shared_openmpi202/"
 
 -- The return value should not contain any dot or slash
 dotSlashRemover :: String -> String
@@ -64,8 +65,9 @@ main = do
 
   -- Export proper exnvironmental variables
   let
-    ldCommand  = "export LD_LIBRARY_PATH=" ++ ldDir ++ ":$LD_LIBRARY_PATH \n "
-    callORCA x = callCommand $ ldCommand ++ x
+    pathCommand  = "export PATH=" ++ mpiDir ++ "/bin:$PATH \n "    
+    ldCommand    = "export LD_LIBRARY_PATH=" ++ ldDir ++ ":$LD_LIBRARY_PATH \n "
+    callORCA x = callCommand $ pathCommand ++ ldCommand ++ x
 
   -- Get contents of the current repository
   dirs <- getCurrentDirectory

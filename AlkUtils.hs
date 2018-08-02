@@ -23,7 +23,7 @@ printLiakosLinearTri myNum = do
 printLiakosLinearSing :: Integer -> IO ()
 printLiakosLinearSing myNum = do
   let myName   = "C.sing." ++ (show myNum) ++ ".xyz"
-      myLength = 3 * myNum
+      myLength = 3 * myNum + 2
       geom     = (Printf.printf " %d \n" myLength) ++ " 0 1 \n" ++ (printAlkane False myNum) :: String
   putStr $ " fileName=" ++ myName ++ " .. "
   writeFile myName geom
