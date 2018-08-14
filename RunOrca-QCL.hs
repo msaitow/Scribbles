@@ -8,12 +8,27 @@ import System.Process
 import System.Environment
 
 import MSUtils
-  
+
+--------------------------------------------------------------------  
 -- Variables
+--------------------------------------------------------------------  
 execName   = "orca"
 scratchDir = "/work/$USER/"
 mpiDir     = "/usr/local/orca/402/"
 ldDir      = mpiDir ++ "orca_4_0_1_2_linux_x86-64_shared_openmpi202/"
+--------------------------------------------------------------------
+
+-- Split the input into forward and afterward in terms of '.'
+-- ex) splitAtDot "C90.inp" -> ("C90", ".inp")
+-- NOTE: This splits, for example, "C90.loose.inp" into ("C90.", "loose.inp")
+splitAtDotForward :: String -> (String, String)
+splitAtDotForward x
+  | myIndex /= Nothing = splitAt (Maybe.fromJust myIndex) x
+  | otherwise          = ("None", "")
+  where
+    findDotIndex :: String -> Maybe Int
+    findDotIndex kore = List.findIndex (== '.') kore
+    myIndex = findDotIndex x
 
 -- The return value should not contain any dot or slash
 dotSlashRemover :: String -> String
