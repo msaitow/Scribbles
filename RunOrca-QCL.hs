@@ -7,7 +7,7 @@ import Data.Time
 import System.Process
 import System.Environment
 
-import MSUtils
+--import MSUtils
 
 --------------------------------------------------------------------  
 -- Variables
@@ -47,6 +47,7 @@ main = do
   putStrLn " RunOrca            "
   putStrLn " ==================="
   putStrLn $ " * orca directory    : " ++ ldDir
+  putStrLn $ " * mpi directory     : " ++ mpiDir
   
   -- Get the target directory
   args <- getArgs
