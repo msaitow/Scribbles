@@ -55,7 +55,7 @@ main = do
   if length args > 0 then do
     putStrLn $ " * Input file        : " ++ (args !! 0)
     else do
-    error "Give the name of your input file\n"
+    error "Give the name of your input file! Fowlloing are the instructions. \n 1) Input file name should not include any dot except the one at the end e.g., ch2-rhf.inp is OK but ch2.rhf.inp is NOT OK!\n 2) You should call RunOrca in the same directory as the input file e.g., RunOrca ./o2.inp (or simply o2.inp) is OK but RunOrca ../o2.inp is NOT OK!"    
 
   -- Input label (label ++ ".inp" = input file name)
   let myLabel = if fst x == "None" then snd x else fst x
