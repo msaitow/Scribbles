@@ -81,10 +81,13 @@ main = do
 
   -- Export proper exnvironmental variables
   let
-    pathCommand  = "export PATH=" ++ mpiDir ++ "/bin:$PATH \n "    
+    pathCommand  = "export PATH=" ++ mpiDir ++ "/bin:$PATH \n "
     ldCommand    = "export LD_LIBRARY_PATH=" ++ ldDir ++ ":$LD_LIBRARY_PATH \n "
     callORCA x = callCommand $ pathCommand ++ ldCommand ++ x
 
+  -- Set Proper environmental variables
+  setEnv "LD_LIBRARY_PATH" (mpiDir ++ "lib")
+  
   -- Get contents of the current repository
   dirs <- getCurrentDirectory
   cons <- getDirectoryContents dirs
