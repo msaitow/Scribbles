@@ -100,17 +100,17 @@ main = do
   -- If there're GBW files in the current directory, we just copy them into scratch
   submitted <- mapM (\x -> callProcess "cp" [x, myScratchDir]) gbwNames
   
-   -- Submit a calculation
-   submit <- callORCA $ myOrca ++ " " ++ (myScratchDir ++ myLabel ++ ".inp") ++ " | tee ./" ++ myLabel ++ ".out"
+  -- Submit a calculation
+  submit <- callORCA $ myOrca ++ " " ++ (myScratchDir ++ myLabel ++ ".inp") ++ " | tee ./" ++ myLabel ++ ".out"
  
-   putStrLn "Calculation finished!"
+  putStrLn "Calculation finished!"
    
-   -- Convert the gbw file into molden file
-   mv      <- callCommand $ "cp " ++ (myScratchDir ++ myLabel ++ ".gbw" ++ " ./")
-   rm      <- callCommand $ "rm " ++ myScratchDir ++ "*.gbw"  
-   convert <- callORCA    $ myOrca ++ "_2mkl " ++ myLabel ++ " -molden"
-   rename  <- callCommand $ "mv " ++ myLabel ++ ".molden.input" ++ " ./" ++ myLabel ++ ".molden"
-   --mv      <- callCommand $ "rm " ++ (myLabel ++ ".gbw")    
+  -- Convert the gbw file into molden file
+  mv      <- callCommand $ "cp " ++ (myScratchDir ++ myLabel ++ ".gbw" ++ " ./")
+  rm      <- callCommand $ "rm " ++ myScratchDir ++ "*.gbw"  
+  convert <- callORCA    $ myOrca ++ "_2mkl " ++ myLabel ++ " -molden"
+  rename  <- callCommand $ "mv " ++ myLabel ++ ".molden.input" ++ " ./" ++ myLabel ++ ".molden"
+  --mv      <- callCommand $ "rm " ++ (myLabel ++ ".gbw")    
 
   putStrLn "Conversion of GBW file into molden file"
   
