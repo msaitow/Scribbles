@@ -408,7 +408,7 @@ std::string generate_input(const double intern_dist, const std::string name_base
   file << "lct.DoPNO       = True" << std::endl;
   file << "lct.UseOrthPNOs = True" << std::endl;
   file << "lct.DoLoc       = True" << std::endl;
-  file << "lct.DoCEPT2     = True" << std::endl;
+  file << "lct.DoCEPT2     = " << (_doCEPT2 ? "True" : "False") << std::endl;
   file << "" << std::endl;
   file << "lct.TCutPNOrho0 = " << boost::format("%14.10e") % _tCutPNO   << std::endl;
   file << "lct.TCutPNOrho1 = " << boost::format("%14.10e") % _tCutPNO   << std::endl;
