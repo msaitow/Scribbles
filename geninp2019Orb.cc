@@ -18,7 +18,8 @@ typedef std::map<double, std::vector<std::string> > len_files;  // <bond length,
 
 std::string generate_input(const double intern_dist, const std::string name_base);
 
-const std::string basis("def2-SVP");
+//const std::string basis("def2-SVP");
+const std::string basis("def2-TZVPP");
 
 int _doCEPT2(0);
 double _tCutPNO(0.0);
@@ -50,9 +51,9 @@ int main(int argc, char* argv[])
   // Bond lengths
   std::vector<double> lengths;
   //lengths.push_back(0.6 );
-  lengths.push_back(0.7 );
-  lengths.push_back(0.8 );
-  lengths.push_back(0.9 );
+  ///lengths.push_back(0.7 );
+  ///lengths.push_back(0.8 );
+  ///lengths.push_back(0.9 );
   lengths.push_back(0.95);
   lengths.push_back(1.0 );
   lengths.push_back(1.1 );
@@ -65,8 +66,8 @@ int main(int argc, char* argv[])
   lengths.push_back(2.2 );
   lengths.push_back(2.4 );
   lengths.push_back(2.6 );
-  lengths.push_back(2.8 );
-  lengths.push_back(3.0 );
+  ///lengths.push_back(2.8 );
+  ///lengths.push_back(3.0 );
 
   len_files names;
 
@@ -352,8 +353,25 @@ std::string generate_input(const double intern_dist, const std::string name_base
   file << "#casscf.closed = [4]" << std::endl;
   file << "#casscf.occ    = [6]" << std::endl;
   file << "casscf.frozen = []" << std::endl;
-  file << "casscf.closed = [0,1,2,3]" << std::endl;
-  file << "casscf.occ    = [4,5,6,7,8,10]" << std::endl;  
+  if     ( (intern_dist>=0.95) && (intern_dist< 1.3) )
+    file << "casscf.closed = [0,1,2,3]" << std::endl;    
+    file << "casscf.occ    = [4,5,6,7,8,10]" << std::endl;
+  else if( (intern_dist>=1.3 ) && (intern_dist< 1.8) )
+    file << "casscf.closed = [0,1,2,3]" << std::endl;
+    file << "casscf.occ    = [4,5,6,7,8,9]" << std::endl;
+  else if( (intern_dist>=1.8 ) && (intern_dist< 2.0) ){
+    file << "casscf.closed = [0,1,2,4]" << std::endl;
+    file << "casscf.occ    = [3,5,6,7,8,9]" << std::endl;
+  }
+  else if( (intern_dist>=2.0 ) && (intern_dist< 2.8) ){
+    file << "casscf.closed = [0,1,2,3]" << std::endl;
+    file << "casscf.occ    = [4,5,6,7,8,9]" << std::endl;
+  }
+///  else if( (intern_dist>=2.8 ) && (intern_dist< ) ){
+///    file << "casscf.closed = [0,1,2,3]" << std::endl;
+///    file << "casscf.occ    = [4,5,6,7,8,9]" << std::endl;
+///  }
+  
   file << "" << std::endl;
   file << "#casscf.isymstate = 0" << std::endl;
   file << "#casscf.natural_orbitals = True                                              " << std::endl;
