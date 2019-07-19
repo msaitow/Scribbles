@@ -353,12 +353,14 @@ std::string generate_input(const double intern_dist, const std::string name_base
   file << "#casscf.closed = [4]" << std::endl;
   file << "#casscf.occ    = [6]" << std::endl;
   file << "casscf.frozen = []" << std::endl;
-  if     ( (intern_dist>=0.95) && (intern_dist< 1.3) )
+  if     ( (intern_dist>=0.95) && (intern_dist< 1.3) ){
     file << "casscf.closed = [0,1,2,3]" << std::endl;    
     file << "casscf.occ    = [4,5,6,7,8,10]" << std::endl;
-  else if( (intern_dist>=1.3 ) && (intern_dist< 1.8) )
+  }
+  else if( (intern_dist>=1.3 ) && (intern_dist< 1.8) ){
     file << "casscf.closed = [0,1,2,3]" << std::endl;
     file << "casscf.occ    = [4,5,6,7,8,9]" << std::endl;
+  }
   else if( (intern_dist>=1.8 ) && (intern_dist< 2.0) ){
     file << "casscf.closed = [0,1,2,4]" << std::endl;
     file << "casscf.occ    = [3,5,6,7,8,9]" << std::endl;
