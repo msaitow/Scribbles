@@ -10,6 +10,7 @@
 
 // How to compile
 // On QCL(2019): g++ -I/usr/local/gcc73.mvapich2.el75/include/boost-1_62 -L/usr/local/gcc73.mvapich2.el75/lib -L/usr/local/gcc73.mvapich2.el75/lib64 ./geninp.cc
+// On Hasebe: g++ -I/home/masaaki/include/boost ./geninp2019.cc
 
 using namespace std;
 
@@ -17,38 +18,35 @@ typedef std::map<double, std::vector<std::string> > len_files;  // <bond length,
 
 std::string generate_input(const double intern_dist, const std::string name_base);
 
-std::string basis("def2-SVP");
+const std::string basis("def2-SVP");
 
 int _doCEPT2(0);
-int _CUM(0);
-int _FUNC(0); // 0=cisd, 1=cepa0, 2=acpf, 3=aqcc
+double _tCutPNO(0.0);
+double _tCutPairs(0.0);
 
 int main(int argc, char* argv[])
 {
   if(argc >= 2)
-    _doCEPT2 = atoi(argv[1]);
+    _doCEPT2   = atoi(argv[1]);
   if(argc >= 3)
-    _CUM     = atoi(argv[2]);
+    _tCutPNO   = atof(argv[2]);
   if(argc >= 4)
-    _FUNC    = atoi(argv[3]);
+    _tCutPairs = atof(argv[3]);
 
-  std::cout << " ++ Wave function Ansatz ... " << (_doCEPT2 ? "CEPT2" : "CASPT2") << std::endl;
-  //std::cout << " ++ Use cumu_of .... " << (_OF ? "true" : "false") << std::endl;
-  std::cout << " ++ Use of " << basis << " basis set" << std::endl;
-
-  std::string func("cisd");
-  if(_FUNC == 1) func = "cepa0";
-  if(_FUNC == 2) func = "acpf";
-  if(_FUNC == 3) func = "aqcc";
-  if(_FUNC >= 4) {
-    std::cout << "functional specification incorrect" << endl;
-    abort();
-  }
-  std::cout << " ++ Functional .... " << func << std::endl;
+  std::cout << " ++ Wave function Ansatz ... " << (_doCEPT2 ? "CEPT2" : "CASPT2")       << std::endl;
+  std::cout << " ++ TCutPNOs used        ... " << boost::format("%16.10e") % _tCutPNO   << std::endl;
+  std::cout << " ++ TCutPairs used       ... " << boost::format("%16.10e") % _tCutPairs << std::endl;
 
   // Base of the name of input file
-  const std::string n_base("R_eq");
-
+  std::string n_base("R_eq");
+  {
+    std::ostringstream pno;
+    pno << boost::format("%e") % _tCutPNO;
+    std::ostringstream pairs;
+    pairs << boost::format("%e") % _tCutPairs;
+    n_base += (_doCEPT2 ? "_CEPT2_" : "_CASPT2_") + pno.str() + "_" + pairs.str() + "_" + basis;
+  }
+  
   // Bond lengths
   std::vector<double> lengths;
   //lengths.push_back(0.6 );
@@ -77,7 +75,7 @@ int main(int argc, char* argv[])
     stm << *l;
     std::string scf_name   ("./scf_r_" + stm.str() + "_.out");
     std::string casscf_name("./casscf_r_" + stm.str() + "_.out");
-    std::string mrci_name  ("./lct_r_" + stm.str() + "_.out");
+    std::string mrci_name  ("./lct_r_" + stm.str() + "_.out");    
     std::vector<std::string> file_names;
     file_names.push_back(scf_name);
     file_names.push_back(casscf_name);
@@ -93,8 +91,19 @@ int main(int argc, char* argv[])
     system(mrci_exec.c_str());
   }
 
-  { // Process output files of scf procedure
-    std::ofstream outfile("scf_summary.out");
+  {
+    
+    std::string fileName("scf_summary");
+    {
+      std::ostringstream pno;
+      pno << boost::format("%e") % _tCutPNO;
+      std::ostringstream pairs;
+      pairs << boost::format("%e") % _tCutPairs;
+      fileName += (_doCEPT2 ? "_CEPT2_" : "_CASPT2_") + pno.str() + "_" + pairs.str() + "_" + basis + ".out";
+    }
+    
+    // Process output files of scf procedure
+    std::ofstream outfile(fileName);
 
     // Extract information from the output file to compile plottable data file
     for(len_files::const_iterator n = names.begin();n != names.end();++n){
@@ -152,8 +161,19 @@ int main(int argc, char* argv[])
     } // End n
   } // End scope
 
-  { // Process output files of casscf procedure
-    std::ofstream outfile("casscf_summary.out");
+  {
+
+    std::string fileName("casscf_summary");
+    {
+      std::ostringstream pno;
+      pno << boost::format("%e") % _tCutPNO;
+      std::ostringstream pairs;
+      pairs << boost::format("%e") % _tCutPairs;
+      fileName += (_doCEPT2 ? "_CEPT2_" : "_CASPT2_") + pno.str() + "_" + pairs.str() + "_" + basis + ".out";
+    }
+    
+    // Process output files of casscf procedure
+    std::ofstream outfile(fileName);
 
     // Extract information from the output file to compile plottable data file
     for(len_files::const_iterator n = names.begin();n != names.end();++n){
@@ -211,8 +231,19 @@ int main(int argc, char* argv[])
     } // End n
   } // End scope
 
-  { // Process output files of mrci procedure
-    std::ofstream outfile("lct_summary.out");
+  {
+
+    std::string fileName("lct_summary");
+    {
+      std::ostringstream pno;
+      pno << boost::format("%e") % _tCutPNO;
+      std::ostringstream pairs;
+      pairs << boost::format("%e") % _tCutPairs;
+      fileName += (_doCEPT2 ? "_CEPT2_" : "_CASPT2_") + pno.str() + "_" + pairs.str() + "_" + basis + ".out";
+    }
+    
+    // Process output files of mrci procedure
+    std::ofstream outfile(fileName);
 
     // Extract information from the output file to compile plottable data file
     for(len_files::const_iterator n = names.begin();n != names.end();++n){
@@ -379,16 +410,10 @@ std::string generate_input(const double intern_dist, const std::string name_base
   file << "lct.DoLoc       = True" << std::endl;
   file << "lct.DoCEPT2     = True" << std::endl;
   file << "" << std::endl;
-  file << "lct.TCutPNOrho0 = 1e-8" << std::endl;
-  file << "lct.TCutPNOrho1 = 1e-8" << std::endl;
-  file << "lct.TCutPNOrho2 = 1e-8" << std::endl;
-  file << "lct.TCutPairs   = 1e-5" << std::endl;
-  file << "" << std::endl;
-  file << "lct.TCutPNOrho0 = 0.0" << std::endl;
-  file << "lct.TCutPNOrho1 = 0.0" << std::endl;
-  file << "lct.TCutPNOrho2 = 0.0" << std::endl;
-  file << "lct.TCutPairs   = 0.0" << std::endl;
-  file << "" << std::endl;
+  file << "lct.TCutPNOrho0 = " << boost::format("%14.10e") % _tCutPNO   << std::endl;
+  file << "lct.TCutPNOrho1 = " << boost::format("%14.10e") % _tCutPNO   << std::endl;
+  file << "lct.TCutPNOrho2 = " << boost::format("%14.10e") % _tCutPNO   << std::endl;
+  file << "lct.TCutPairs   = " << boost::format("%14.10e") % _tCutPairs << std::endl;
   file << "lct.MaxIter = 500" << std::endl << std::endl;
   
   return name;
