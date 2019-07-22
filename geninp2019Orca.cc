@@ -74,17 +74,13 @@ int main(int argc, char* argv[])
   for(std::vector<double>::const_iterator l = lengths.begin();l != lengths.end();++l){
     std::ostringstream stm;
     stm << *l;
-    std::string scf_name   ("./scf_r_"   + stm.str() + "_.out");
-    std::string ccsd_name  ("./ccsd_r_"  + stm.str() + "_.out");
     std::string ccsdt_name ("./ccsdt_r_" + stm.str() + "_.out");    
     std::vector<std::string> file_names;
-    file_names.push_back(scf_name);
-    file_names.push_back(ccsd_name);
     file_names.push_back(ccsdt_name);
     names.insert(len_files::value_type(*l, file_names));
 
     std::string name(generate_input(*l, n_base));
-    std::string orca_exec  ("~/orca_kofo_2qcl/orca/x86_exe/orca ./" + name + " | tee " + scf_name);
+    std::string orca_exec  ("~/orca_kofo_2qcl/orca/x86_exe/orca ./" + name + " | tee " + ccsdt_name);
     system(orca_exec.c_str());
   }
 
@@ -166,9 +162,9 @@ int main(int argc, char* argv[])
 
     // Extract information from the output file to compile plottable data file
     for(len_files::const_iterator n = names.begin();n != names.end();++n){
-      std::ifstream infile(n->second[1].c_str());
+      std::ifstream infile(n->second[0].c_str());
       if(infile.fail()){
-        cout << "Can't open " + n->second[1] << endl;
+        cout << "Can't open " + n->second[0] << endl;
         abort();
       }
 
@@ -193,7 +189,7 @@ int main(int argc, char* argv[])
         else if(isECC && !isDots){
           where = line.find("...", 0);
           if(where != std::string::npos)
-            { isECC = true; contiguous = true; }
+            { isDots = true; contiguous = true; }
           else contiguous = false;
         }
         else contiguous = false;
@@ -207,7 +203,7 @@ int main(int argc, char* argv[])
         outfile << boost::format("%5.4f  %10s") % n->first % energy << endl;
       else {
         outfile << boost::format("#%5.4f  energy not found") % n->first << endl;
-        cout << "casscf energy can't be found for " << n->first << endl;
+        cout << "ccsd energy can't be found for " << n->first << endl;
       }
 
     } // End n
@@ -229,9 +225,9 @@ int main(int argc, char* argv[])
 
     // Extract information from the output file to compile plottable data file
     for(len_files::const_iterator n = names.begin();n != names.end();++n){
-      std::ifstream infile(n->second[2].c_str());
+      std::ifstream infile(n->second[0].c_str());
       if(infile.fail()){
-        cout << "Can't open " + n->second[2] << endl;
+        cout << "Can't open " + n->second[0] << endl;
         abort();
       }
 
@@ -256,7 +252,7 @@ int main(int argc, char* argv[])
         else if(isECC && !isDots){
           where = line.find("...", 0);
           if(where != std::string::npos)
-            { isECC = true; contiguous = true; }
+            { isDots = true; contiguous = true; }
           else contiguous = false;
         }
         else contiguous = false;
@@ -270,7 +266,7 @@ int main(int argc, char* argv[])
         outfile << boost::format("%5.4f  %10s") % n->first % energy << endl;
       else {
         outfile << boost::format("#%5.4f  energy not found") % n->first << endl;
-        cout << "lct energy can't be found for " << n->first << endl;
+        cout << "ccsd(t) energy can't be found for " << n->first << endl;
       }      
 
     } // End n
@@ -285,8 +281,8 @@ std::string generate_input(const double intern_dist, const std::string name_base
   std::string name(name_base + "_" + stm.str() + ".inp");
   std::ofstream file(name.c_str());
 
-  file << "! RHF " +basis + " CCSD(T) TightSCF NoAutoStart" << std::endl;
-  file << "" << std::endl;
+  file << "! RHF " +basis + " CCSD(T) TightSCF" << std::endl;
+  file << "! NoFrozenCore" << std::endl;
 
   file << "*xyz 0 1" << endl;
   // Internuclear distaces
