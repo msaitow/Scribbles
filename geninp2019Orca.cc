@@ -288,7 +288,7 @@ std::string generate_input(const double intern_dist, const std::string name_base
   file << "! RHF " +basis + " CCSD(T) TightSCF NoAutoStart" << std::endl;
   file << "" << std::endl;
 
-  file << "* 0 1" << endl;
+  file << "*xyz 0 1" << endl;
   // Internuclear distaces
   file << boost::format("N  0.0000000000    0.0000000000    %8.5f") % ( intern_dist/2.0) << std::endl;
   file << boost::format("N  0.0000000000    0.0000000000    %8.5f") % (-intern_dist/2.0) << std::endl;
