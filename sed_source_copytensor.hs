@@ -23,7 +23,8 @@ returnFiles inFiles = lhsFiles
     -- Fetch input files    
     cppFiles  = map (\x -> (fst x)++(snd x)) $ List.nub $ filter (\x -> snd x == ".cpp") $ splitted
     -- C++ source files for LHS vectors
-    lhsFiles  = [x | x<-cppFiles, List.isPrefixOf "lct_LHS_" x]
+    --lhsFiles  = [x | x<-cppFiles, List.isPrefixOf "lct_LHS_" x]
+    lhsFiles  = [x | x<-cppFiles, List.isPrefixOf "lct_OVL_" x]
 
 -- Do a sed command
 doSed :: [String] -> [String]
