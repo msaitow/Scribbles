@@ -18,3 +18,22 @@ def main() -> None:
     print(" * Scratch directory : ", myScratchDir)
 
     # Create the scratch directory
+    subprocess.call('mkdir ' + myScratchDir, shell=True)
+
+    # Copy the input file into the scratch
+    if len(myLabel) == 0: raise ValueError('Input file name should end by \".inp\"!')
+    else: subprocess.call('cp ./' + myLabel + '.inp ', shell=True)
+
+    # Submit a calculation
+    subprocess.call(myOrca + ' ' + myScratchDir + myLabel + '.inp | tee ./' + myLabel + '.out', shell=True)
+    print('Calculation finished!')
+
+    # Convert the gbw file into molden file
+    subprocess.call('mv ' + myScratchDir + myLanel + '.gbw' + ' ./', shell=True)
+    subprocess.call(myOrca + '_2mkl ' + myLabel + ' -molden', shell=True)
+    subprocess.call('mv ' + myLanel + '.molden.input' + ' ./' + myLabel + '.molden', shell=True)
+    subprocess.call('rm' + myLabel + '.gbw')
+
+    print('Conversion of GBW files into molden file!')
+
+    
